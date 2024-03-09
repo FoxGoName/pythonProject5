@@ -1,15 +1,33 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>User Profile</title>
-</head>
-<body>
-    <h1>User Profile</h1>
-    <p><strong>Name:</strong> {{ user.name }}</p>
-    <p><strong>Nick Name:</strong> {{ user.nickName }}</p>
-    <p><strong>Email Address:</strong> {{ user.emailAddress }}</p>
-    <p><strong>Shipping Address:</strong> {{ user.shippingAddress }}</p>
 
-    <a href="{% url 'logout' %}">Logout</a>
-</body>
-</html>
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>User Profile</h2>
+<p><strong>Name:</strong> {{ user.name }}</p>
+<p><strong>Nick Name:</strong> {{ user.nickName }}</p>
+<p><strong>Email Address:</strong> {{ user.emailAddress }}</p>
+<p><strong>Shipping Address:</strong> {{ user.shippingAddress }}</p>
+
+<h2>Orders:</h2>
+{% for order in orders %}
+    <p><strong>Order ID:</strong> {{ order.orderID }}</p>
+    <p><strong>Order Amount:</strong> {{ order.orderAmount }}</p>
+    <p><strong>Order Status:</strong> {{ order.orderStatus }}</p>
+    <p><strong>Order Date:</strong> {{ order.purchaseDate }}</p>
+
+    <h3>Order Items:</h3>
+    <ul>
+    {% for order_item in order.orderitem_set.all %}
+        <li>
+            <p><strong>Product:</strong> {{ order_item.productID.productName }}</p>
+            <p><strong>Quantity:</strong> {{ order_item.quantityToBuy }}</p>
+            <p><strong>Price:</strong> {{ order_item.price }}</p>
+        </li>
+    {% endfor %}
+    </ul>
+
+{% endfor %}
+
+<a href="{% url 'logout' %}">Logout</a>
+
+{% endblock %}

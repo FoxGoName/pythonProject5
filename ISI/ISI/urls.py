@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.urls import path
 from django.conf import settings
 from django.conf.urls.static import static
-from store.views import  user_profile, logout_view, check_out, SignUpView,CustomLoginView,frontpage,productManagePage,productCreateView,ProductDetailView,add_to_cart,view_cart
+from store.views import  create_order, user_profile, logout_view, check_out, SignUpView,CustomLoginView,frontpage,productManagePage,productCreateView,ProductDetailView,add_to_cart,view_cart
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -31,7 +31,7 @@ urlpatterns = [
     path('cart/', view_cart, name='view_cart'),
 
     path('cart/check_out', check_out, name='check_out'),
-    # path('cart/create_order', create_order, name='create_order'),
+     path('cart/create_order', create_order, name='create_order'),
     # path('cart/<int:product_id>/', ProductDetailView.as_view(), name='product_detail'),
     path('product/<int:product_id>/', ProductDetailView.as_view(), name='product_detail'),
     path('add_to_cart/<int:product_id>/', add_to_cart, name='add_to_cart'),

@@ -33,13 +33,13 @@ class Order(models.Model):
     orderID = models.IntegerField(primary_key=True)
     userID = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     purchaseDate = models.DateField(auto_now_add=True)
-    orderAmount = models.FloatField()
+    orderAmount = models.FloatField(default=0)
     orderStatus = models.CharField(max_length=255)
 
 
 class OrderItem(models.Model):
     id = models.AutoField(primary_key=True)
-    orderID = models.ForeignKey(Order, on_delete=models.CASCADE)
+    order_ID = models.ForeignKey(Order, on_delete=models.CASCADE)
     productID = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantityToBuy = models.IntegerField()
     price = models.FloatField()

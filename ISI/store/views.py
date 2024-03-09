@@ -2,6 +2,7 @@ from django import forms
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView
+from django.http import HttpResponseServerError
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy, reverse
 from django.views import View
@@ -27,11 +28,26 @@ def logout_view(request):
     return redirect('frontpage')
 from django.shortcuts import render
 
+
+# def user_profile(request):
+#     user = request.user
+#     orders = Order.objects.filter(userID=user)
+#
+#     context = {
+#         'user': user,
+#         'orders': orders
+#     }
+#
+#     return render(request, 'user_profile.html', context)
 def user_profile(request):
     user = request.user
+    orders = Order.objects.filter(userID_id=user.userID)
+
     context = {
-        'user': user
+        'user': user,
+        'orders': orders
     }
+
     return render(request, 'user_profile.html', context)
 
 def frontpage(request):
@@ -101,6 +117,18 @@ def view_cart(request):
 from django.shortcuts import render
 from .models import CartItem, Cart
 
+# def check_out(request):
+#     user = request.user
+#     cart = Cart.objects.get(userID=user)
+#     cart_items = CartItem.objects.filter(cartID=cart)
+#
+#     context = {
+#         'user': user,
+#         'cart_items': cart_items,
+#         'cart': cart,
+#     }
+#
+#     return render(request, 'check_out.html', context)
 def check_out(request):
     user = request.user
     cart = Cart.objects.get(userID=user)
@@ -131,3 +159,53 @@ def check_out(request):
 #     cart.delete()
 #
 #     return redirect('cart.html')
+
+# ok but only one
+# from django.shortcuts import redirect
+#
+# def create_order(request):
+#     cart = Cart.objects.get(userID=request.user)
+#     cart_items = cart.cartitem_set.all()
+#
+#     # 创建订单
+#     order = Order(userID=request.user, orderAmount=cart.totalAmount, orderStatus="Pending")
+#     order.save()
+#
+#     # 创建订单项
+#     for cart_item in cart_items:
+#         order_item = OrderItem(orderID=order, productID=cart_item.productID, quantityToBuy=cart_item.quantityToBuy, price=cart_item.productID.unitPrice)
+#
+#
+#     # 清空购物车
+#     cart.delete()
+#
+#     return redirect('cart.html')
+
+from django.db import transaction
+
+
+def create_order(request):
+    cart = Cart.objects.get(userID=request.user)
+    cart_items = cart.cartitem_set.all()
+
+    # 创建订单
+    order = Order(userID=request.user, orderAmount=cart.totalAmount, orderStatus="Pending")
+    order.save()
+    with transaction.atomic():
+
+        # 将购物车中的购物项添加到订单中
+        for cart_item in cart_items:
+            order_item = OrderItem(
+                order_ID=order,
+                productID=cart_item.productID,
+                quantityToBuy=cart_item.quantityToBuy,
+                price=cart_item.productID.unitPrice
+            )
+            order_item.save()
+
+        # 清空购物车
+    cart.delete()
+
+    return redirect('cart.html')
+
+
