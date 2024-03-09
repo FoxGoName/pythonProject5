@@ -24,7 +24,12 @@
                         <td>{% widthratio cart_item.productID.unitPrice 1 cart_item.quantityToBuy %}</td>
                     </tr>
                 {% endfor %}
+
             </tbody>
+            <form action="{% url 'check_out' %}" method="post">
+                {% csrf_token %}
+                <input type="submit" value="check-out and buy">
+            </form>
         </table>
     {% else %}
         <p>Your cart is empty.</p>

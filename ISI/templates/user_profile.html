@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>User Profile</title>
+</head>
+<body>
+    <h1>User Profile</h1>
+    <p><strong>Name:</strong> {{ user.name }}</p>
+    <p><strong>Nick Name:</strong> {{ user.nickName }}</p>
+    <p><strong>Email Address:</strong> {{ user.emailAddress }}</p>
+    <p><strong>Shipping Address:</strong> {{ user.shippingAddress }}</p>
+
+    <a href="{% url 'logout' %}">Logout</a>
+</body>
+</html>

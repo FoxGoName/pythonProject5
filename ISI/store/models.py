@@ -32,7 +32,7 @@ class CustomUser(AbstractUser):
 class Order(models.Model):
     orderID = models.IntegerField(primary_key=True)
     userID = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-    purchaseDate = models.DateField()
+    purchaseDate = models.DateField(auto_now_add=True)
     orderAmount = models.FloatField()
     orderStatus = models.CharField(max_length=255)
 

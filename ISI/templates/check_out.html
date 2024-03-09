@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Check Out</title>
+</head>
+<body>
+    <h1>Check Out</h1>
+
+    <h2>User Information</h2>
+    <p>Username: {{ user.username }}</p>
+    <p>Shipping Address: {{ user.shippingAddress }}</p>
+
+    <h2>Order Items</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Product Name</th>
+                <th>Quantity</th>
+                <th>Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in cart_items %}
+            <tr>
+                <td>{{ item.productID.productName }}</td>
+                <td>{{ item.quantityToBuy }}</td>
+                <td>{{ item.productID.unitPrice }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h2>Total Amount: {{ cart.totalAmount }}</h2>
+
+    <form action="" method="post">
+        {% csrf_token %}
+        <input type="submit" value="Place Order">
+    </form>
+
+</body>
+</html>

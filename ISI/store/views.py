@@ -1,4 +1,6 @@
 from django import forms
+from django.contrib.auth import logout
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy, reverse
@@ -6,7 +8,7 @@ from django.views import View
 from django.views.generic import CreateView
 
 from .forms import CustomUserCreationForm
-from .models import Product, Cart, CartItem
+from .models import Product, Cart, CartItem, Order, OrderItem
 
 
 # Create your views here.
@@ -20,8 +22,17 @@ class SignUpView(CreateView):
     success_url = reverse_lazy('login')
     template_name = 'signup.html'
 
+def logout_view(request):
+    logout(request)
+    return redirect('frontpage')
 from django.shortcuts import render
 
+def user_profile(request):
+    user = request.user
+    context = {
+        'user': user
+    }
+    return render(request, 'user_profile.html', context)
 
 def frontpage(request):
     products =  Product.objects.all()
@@ -75,6 +86,7 @@ class productCreateView(CreateView):
 from django.shortcuts import render
 from .models import CartItem
 
+@login_required(login_url='login')
 def view_cart(request):
     user = request.user
     cart_items = CartItem.objects.filter(cartID__userID=user)
@@ -84,3 +96,38 @@ def view_cart(request):
     }
 
     return render(request, 'cart.html', context)
+
+#check——out
+from django.shortcuts import render
+from .models import CartItem, Cart
+
+def check_out(request):
+    user = request.user
+    cart = Cart.objects.get(userID=user)
+    cart_items = CartItem.objects.filter(cartID=cart)
+
+    context = {
+        'user': user,
+        'cart_items': cart_items,
+        'cart': cart,
+    }
+
+    return render(request, 'check_out.html', context)
+
+# from django.shortcuts import redirect
+#
+# def create_order(request):
+#     cart = Cart.objects.get(userID=request.user)
+#     cart_items = cart.cartitem_set.all()
+#
+#     # 创建订单
+#     order = Order.objects.create(userID=request.user, orderAmount=cart.totalAmount, orderStatus="Pending")
+#
+#     # 创建订单项
+#     for cart_item in cart_items:
+#         OrderItem.objects.create(orderID=order, productID=cart_item.productID, quantityToBuy=cart_item.quantityToBuy, price=cart_item.productID.unitPrice)
+#
+#     # 清空购物车
+#     cart.delete()
+#
+#     return redirect('cart.html')
