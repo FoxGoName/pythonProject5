@@ -56,3 +56,4 @@ class CartItem(models.Model):
     cartID = models.ForeignKey(Cart, on_delete=models.CASCADE)
     productID = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantityToBuy = models.IntegerField(default=0)
+
