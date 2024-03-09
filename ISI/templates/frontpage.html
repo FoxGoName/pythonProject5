@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block title %}Welcome | {% endblock %}
+
+{% block content %}
+   <div class = "columns is-multiline" >
+            {% for product in products %}
+                <div class="column is-3">
+                   <div class="card">
+                      <div class="card-content">
+                           <div class="media">
+                              <div class="media-content">
+                                  <img src="{{ product.image.url }}" alt="test" width="200" height="300">
+                                 <p class="title is-4">{{ product.productName }}</p>
+                                 <p class="subtitle is-6">{{ product.unitPrice }}</p>
+                              </div>
+                           </div>
+
+                             <footer class="card-footer">
+                                <a href="{% url 'product_detail' product_id=product.productID %}" class="cart-footer-item">View product</a>
+                             </footer>
+
+                   </div>
+
+                </div>
+            {% endfor %}
+   </div>
+{% endblock %}

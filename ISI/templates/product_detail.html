@@ -1,0 +1,21 @@
+{% extends 'base.html'%}
+
+{% block content %}
+
+<div>
+    <img src="{{ product.image.url }}" alt="test" width="200" height="300">
+    <h1>Product Name: {{ product.productName }}</h1>
+    <h1>Product Price: {{ product.unitPrice }}</h1>
+    <h1>Product Category: {{ product.category }}</h1>
+    {% if product.description%}
+    <h1>Product Description: {{ product.productDes }}</h1>
+    {% endif %}
+
+
+     <form method="POST" action="{% url 'add_to_cart' product_id=product.productID %}">
+        {% csrf_token %}
+        <input type="hidden" name="quantity" value="1">
+        <button type="submit">Add to Cart</button>
+    </form>
+</div>
+{% endblock %}
